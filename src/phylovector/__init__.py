@@ -9,12 +9,12 @@ __email__ = "tiago.tresoldi@lingfil.uu.se"
 
 # Import from local modules
 from .phylovector import tree2vector, vector2tree
-from .newick import parse, sorted_newick
+from .newick import _parse, sorted_newick
 
 # Build the namespace
 __all__ = [
     "tree2vector",
     "vector2tree",
-    "parse", # TODO: needed in the common space?
+    "_parse", # TODO: needed in the common space?
     "sorted_newick",
 ]
