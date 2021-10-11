@@ -8,9 +8,10 @@ __author__ = "Tiago Tresoldi"
 __email__ = "tiago.tresoldi@lingfil.uu.se"
 
 # Import from local modules
-from .phylovector import dummy
+from .phylovector import tree2vector, vector2tree
 
 # Build the namespace
 __all__ = [
-    "dummy",
+    "tree2vector",
+    "vector2tree",
 ]
