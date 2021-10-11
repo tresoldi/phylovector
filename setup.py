@@ -32,6 +32,7 @@ setup(
     description="Library for the vector representation of phylogenetic trees",
     entry_points={"console_scripts": ["phylovector=phylovector.__main__:main"]},
     extras_require={
+        "paper" : ["ngesh"],
         "dev": ["black", "flake8", "twine", "wheel"],
         "test": ["pytest"],
     },
