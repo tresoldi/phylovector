@@ -119,5 +119,25 @@ def vector2tree(vector, leaves):
     return tree
 
 
-def tree2vector():
-    print("tree2vector")
+def tree2vector(tree):
+    # Obtain list of leaves and lengths
+    leaves = {leaf.name: leaf.dist for leaf in tree.iter_leaves()}
+    lengths = [leaves[key] for key in sorted(leaves)]
+
+    # Compute the root age (= maximum leaf distance) and extend all branches
+    # as necessary, keeping track of the original value
+    root_age = max([tree.get_distance(tree, leaf) for leaf in leaves])
+    for leaf in leaves:
+        # TODO: could just add any time, without the checking
+        diff = root_age - tree.get_distance(tree, leaf)
+        if diff:
+            leaf = tree & leaf
+            leaf.dist += diff
+
+    # Build ultrametric part of the vector
+    vector = lengths + []
+    for leaf_i, leaf_j in itertools.combinations(sorted(leaves), 2):
+        comm_anc = tree.get_common_ancestor(leaf_i, leaf_j)
+        vector.append(tree.get_distance(comm_anc, leaf_i))
+
+    return vector

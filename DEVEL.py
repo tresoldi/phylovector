@@ -9,8 +9,13 @@ def main():
     leaves = ["A", "B", "C", "D", "E"]
     tree = phylovector.vector2tree(vector, leaves)
 
-    print(tree)
-    print(tree.write(format=1))
+    # print(tree)
+    newick = tree.write(format=1)
+    print(newick)
+
+    new_vector = phylovector.tree2vector(tree)
+    print(new_vector)
+
 
 if __name__ == "__main__":
     main()
