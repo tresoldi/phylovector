@@ -4,6 +4,8 @@ import math
 import ete3
 import networkx as nx
 
+# TODO: allow different types of branch length (ratio, age, etc.)
+
 
 def pathgraph2tree(P):
     # Instantiate the tree to be returned
@@ -92,6 +94,7 @@ def vector2tree(vector, leaves):
         # Compute the path distance from the current node to the root; note
         # that ETE3 sets the distance of the root to 1.0, so we need to
         # subtract this
+        # TODO: can we just use distance to root?
         path = []
         n = leaf
         while n.up:
