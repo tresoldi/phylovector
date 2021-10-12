@@ -122,10 +122,17 @@ def vector2tree(vector, leaves):
     return tree
 
 
-def tree2vector(tree):
+def tree2vector(source_tree):
+    # Make a copy of the tree for manipulation, as we (might) extend the
+    # branch leaves to obtain the ultrametric topology. While `ete3`
+    # offers copy methods, we take the simpler approach of rebuilding
+    # from the Newick representation.
+    tree = ete3.Tree(source_tree.write())
+
     # Obtain list of leaves and lengths
     leaves = {leaf.name: leaf.dist for leaf in tree.iter_leaves()}
     lengths = [leaves[key] for key in sorted(leaves)]
+    print("---", leaves)
 
     # Compute the root age (= maximum leaf distance) and extend all branches
     # as necessary, keeping track of the original value

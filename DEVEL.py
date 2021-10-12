@@ -19,12 +19,13 @@ def main():
     print(new_vector)
 
     # random
-    t0 = ngesh.gen_tree(1.0, 0.5, max_time=3.0, labels="human")
-    t1 = ngesh.gen_tree(1.0, 0.5, max_time=3.0, labels="human", seed=123)
+    # t0 = ngesh.gen_tree(1.0, 0.5, max_time=2.0, labels="human")
+    t1 = ngesh.gen_tree(1.0, 0.5, max_time=2.0, labels="human", seed=123)
     print(t1)
-    leaves = sorted([leaf.name for leaf in t1.iter_leaves()])
     v = phylovector.tree2vector(t1)
-    print(v)
+    print("v", v)
+
+    leaves = sorted([leaf.name for leaf in t1.iter_leaves()])
     t2 = phylovector.vector2tree(v, leaves)
 
     rf, rf_max, x1, x2, x3, x4, x5 = t1.robinson_foulds(t2)
@@ -33,8 +34,8 @@ def main():
     # rf, rf_max, x1, x2, x3, x4, x5 = t1.robinson_foulds(t0)
     # print ("RF distance is %s over a total of %s" %(rf, rf_max))
 
-    print(phylovector.sorted_newick(t1.write(format=1)))
-    print(phylovector.sorted_newick(t2.write(format=1)))
+    print("t1", phylovector.sorted_newick(t1.write(format=1)))
+    print("t2", phylovector.sorted_newick(t2.write(format=1)))
 
     # print ("Partitions in tree2 that were not found in tree1:", edges_t1 - edges_t2)
     # print ("Partitions in tree1 that were not found in tree2:", edges_t2 - edges_t1)
