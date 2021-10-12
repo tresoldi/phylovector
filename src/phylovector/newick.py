@@ -17,6 +17,11 @@ as part of the forthcoming `phylovector` library. The library is developed
 in the context of the Cultural Evolution of Texts project at the University
 of Uppsala, with funding from the Riksbankens Jubileumsfond (grant
 agreement ID: MXM19-1087:1), and released under the MIT license.
+
+If you use this module, please cite the library it is part of:
+
+> Tresoldi, T., (2021). Ngesh: a Python library for synthetic phylogenetic data.
+  Journal of Open Source Software, 6(66), 3173, https://doi.org/10.21105/joss.03173
 """
 
 # TODO: branches without length have a "None" string in the output (bug)
@@ -121,7 +126,11 @@ def sorted_newick(newick):
         else:
             elms += [_tree2str(n) for n in node["children"]]
 
-        return "(%s)" % (",".join(elms))
+        ret = "(%s)" % (",".join(elms))
+        if node["length"]:
+            ret += f":{node['length']}"
+
+        return ret
 
     new_newick = _tree2str(tree) + ";"
 
