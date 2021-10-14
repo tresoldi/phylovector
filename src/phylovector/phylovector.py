@@ -43,6 +43,7 @@ def pathgraph2tree(P):
 
 # TODO: make it work with nameless leaves
 def vector2tree(vector, leaves):
+
     # Compute the number of taxa in the tree by solving the equation `n = (sqrt(8*l+1)-1)/2`,
     # first obtained by solving the combinational one for `n` and check if the value
     # is appropriate.
@@ -132,7 +133,6 @@ def tree2vector(source_tree):
     # Obtain list of leaves and lengths
     leaves = {leaf.name: leaf.dist for leaf in tree.iter_leaves()}
     lengths = [leaves[key] for key in sorted(leaves)]
-    print("---", leaves)
 
     # Compute the root age (= maximum leaf distance) and extend all branches
     # as necessary, keeping track of the original value
