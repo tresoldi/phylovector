@@ -2,3 +2,4 @@ ete3
 networkx
 numpy
 six
+scipy
