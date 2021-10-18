@@ -4,11 +4,9 @@ import ngesh
 import phylovector
 
 
-def stress_test1():
-    INTERVAL = 1000
-
-    for i in range(10000):
-        if i % INTERVAL == 0:
+def stress_test1(iters=1000):
+    for i in range(iters):
+        if i % (iters/10) == 0:
             print("Processing random tree #%i..." % i)
 
         # Generate a random tree, convert to a vector, and convert
@@ -28,9 +26,9 @@ def stress_test1():
         if source_newick != built_newick:
             print("error: [%s] [%s]" % (source_newick, built_newick))
 
-        if i % INTERVAL == 0:
-            print("source", source_newick)
-            print("built", built_newick)
+    #    if i % INTERVAL == 0:
+    #        print("source", source_newick)
+    #        print("built", built_newick)
 
 
 def my_minimize():
@@ -90,5 +88,5 @@ def my_minimize():
 
 
 if __name__ == "__main__":
-    # stress_test1()
-    my_minimize()
+    stress_test1()
+    #my_minimize()

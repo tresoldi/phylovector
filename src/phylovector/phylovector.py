@@ -47,7 +47,7 @@ def vector2tree(vector, leaves):
     # Compute the number of taxa in the tree by solving the equation `n = (sqrt(8*l+1)-1)/2`,
     # first obtained by solving the combinational one for `n` and check if the value
     # is appropriate.
-    # TODO: check if less than 2 leafs
+    # TODO: check if less than 2 leaves
     n = (math.sqrt(8 * len(vector) + 1) - 1) / 2
     if int(n) != n:
         raise ValueError(f"invalid vector length: {len(vector)}.")
@@ -87,43 +87,34 @@ def vector2tree(vector, leaves):
     # Iterate over all internal nodes (i.e., everything except leaves and root) and set
     # their lengths (i.e., distance from the ancestor) to the maximum length in the tree
     # (i.e., root to leaves) minus the maximum length between descendants
-    max_length = max(ultrametric_d.values())
+    # TODO: skip over leaves? (faster)
+    # TODO: better solution for [0]? integrate with step below?
+    root_age = max(ultrametric_d.values())
     for leaf in tree.iter_descendants():
-        if leaf.is_leaf():
-            continue
-
-        # Compute the path distance from the current node to the root; note
-        # that ETE3 sets the distance of the root to 1.0, so we need to
-        # subtract this
-        # TODO: can we just use distance to root?
-        path = []
-        n = leaf
-        while n.up:
-            path.append(n.dist)
-            n = n.up
-        path_length = sum(path) - 1.0
-
         # Get all descendant leaves and their maximum distance, which
         # is the age of the current node
         node_height = max(
-            [
+            [0]
+            + [
                 ultrametric_d[leaf_i, leaf_j]
                 for leaf_i, leaf_j in itertools.combinations(leaf.get_leaf_names(), 2)
             ]
         )
 
         # Finally set the branch length (i.e., node distance)
-        leaf.dist = max_length - path_length - node_height
+        age_anc = tree.get_distance(leaf.up)
+        age_cur = root_age - node_height
+        leaf.dist = age_cur - age_anc
 
-    # Set all leave branches to their minimal distance
+    # Set all leave branches to lengths
     for leaf_idx, leaf in enumerate(leaves):
         tree_node = tree & leaf
-        tree_node.dist = vector[leaf_idx]
+        tree_node.dist -= vector[leaf_idx]
 
     return tree
 
 
-def tree2vector(source_tree):
+def tree2vector(source_tree: ete3.Tree):
     # Make a copy of the tree for manipulation, as we (might) extend the
     # branch leaves to obtain the ultrametric topology. While `ete3`
     # offers copy methods, we take the simpler approach of rebuilding
@@ -131,23 +122,26 @@ def tree2vector(source_tree):
     tree = ete3.Tree(source_tree.write())
 
     # Obtain list of leaves and lengths
-    leaves = {leaf.name: leaf.dist for leaf in tree.iter_leaves()}
-    lengths = [leaves[key] for key in sorted(leaves)]
+    leaves = sorted([leaf.name for leaf in tree.iter_leaves()])
 
     # Compute the root age (= maximum leaf distance) and extend all branches
-    # as necessary, keeping track of the original value
+    # as necessary, also collecting the `lengths` portion of the vector
     root_age = max([tree.get_distance(tree, leaf) for leaf in leaves])
+    lengths = []
     for leaf in leaves:
-        # TODO: could just add any time, without the checking
-        diff = root_age - tree.get_distance(tree, leaf)
-        if diff:
-            leaf = tree & leaf
-            leaf.dist += diff
+        # Compute the difference (age/height of node) and append to
+        # the lead node distance -- note that this is done even if
+        # the node is alive (i.e, difference of zero)
+        leaf_node = tree & leaf
+
+        diff = root_age - tree.get_distance(tree, leaf_node)
+        leaf_node.dist += diff
+        lengths.append(diff)
 
     # Build ultrametric part of the vector
-    vector = lengths + []
-    for leaf_i, leaf_j in itertools.combinations(sorted(leaves), 2):
+    ultrametric = []
+    for leaf_i, leaf_j in itertools.combinations(leaves, 2):
         comm_anc = tree.get_common_ancestor(leaf_i, leaf_j)
-        vector.append(tree.get_distance(comm_anc, leaf_i))
+        ultrametric.append(tree.get_distance(comm_anc, leaf_i))
 
-    return vector
+    return lengths + ultrametric
