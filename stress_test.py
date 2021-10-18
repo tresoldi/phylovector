@@ -32,52 +32,63 @@ def stress_test1():
             print("source", source_newick)
             print("built", built_newick)
 
+
 def my_minimize():
     def treefun(x):
         ref = ["BAAA", "ABCA", "ABAB", "BABA", "ABAA"]
-        for leaf_i, leaf_j in itertools.combinations(range(len(ref)), 2)
-            matches = [ref[leaf_i][c] for c in range(
-                 
-            )]
+        alm_len = len(ref[0])
 
+        # Collect ultrametric info -- note that it is not correcting by branch length
         n = int((math.sqrt(8 * len(x) + 1) - 1) / 2)
+        ultrametric_d = {}
+        matches = {}
+        for idx, (leaf_i, leaf_j) in enumerate(
+            itertools.combinations(range(len(ref)), 2)
+        ):
+            ultrametric_d[leaf_i, leaf_j] = x[idx + n]
+            ultrametric_d[leaf_j, leaf_i] = x[idx + n]
 
-        branch_length = {leaf_idx:x[leaf_idx] for leaf_idx in range(n)}
+            matches[leaf_i, leaf_j] = len(
+                [ci for ci, cj in zip(ref[leaf_i], ref[leaf_j]) if ci == cj]
+            )
 
-        ultrametric_d = {}  # TODO: rename later
-        root_dist = {leaf_idx:[] for leaf_idx in range(n)} # init to empty
-        for idx, (leave_i, leave_j) in enumerate(itertools.combinations(range(n), 2)):
-            ultrametric_d[leave_i, leave_j] = vector[idx + n]
-            ultrametric_d[leave_j, leave_i] = vector[idx + n]
+        # Compute proportion of distance to length
+        max_dist = max(ultrametric_d.values())
+        max_diff = max(matches.values())
+        v = []
+        for leaf_i, leaf_j in itertools.combinations(range(len(ref)), 2):
+            m = matches[leaf_i, leaf_j]
+            d = ultrametric_d[leaf_i, leaf_j]
 
-            root_dist[leave_i].append(vector[idx + n])
-            root_dist[leave_j].append(vector[idx + n])
+            m_prop = m / alm_len
+            d_prop = 1 - (d / max_dist)
 
-        root_dist = {leaf_idx:max(distances) for leaf_idx, distances in root_dist.items()}
+            v.append(abs(m_prop - d_prop))
 
-        print(n)
-        print(branch_length)
-        print(root_dist)
-        print(ultrametric_d)
-
-    tree = ngesh.gen_tree(1.0, 0.5, max_time=1.0, labels="human", seed=42)
-    vector = phylovector.tree2vector(tree)
-    treefun(vector)
-
-    return
-
-    def myfun(x):
-        v = [x[0]/x[1], x[0]/x[2], x[0]/x[3], x[0]/x[4]]
         return sum(v)
 
-    from scipy.optimize import minimize, rosen, rosen_der
-    x0 =[1.3, 0.7, 0.8, 1.9, 1.2]
-    res = minimize(myfun, x0, method="BFGS", #jac=rosen_der,
-    options={"gtol":1e-6, "disp":True})
-    print(res.x)
+    tree = ngesh.gen_tree(1.0, 0.5, max_time=1.0, labels="human", seed=42)
+    tree.show()
+    vector = phylovector.tree2vector(tree)
+    v = treefun(vector)
 
-    print("..", myfun(res.x))
+    from scipy.optimize import minimize, rosen, rosen_der
+
+    res = minimize(
+        treefun,
+        vector,
+        method="BFGS",  # jac=rosen_der,
+        options={"gtol": 1e-6, "disp": True},
+    )
+
+    inf_v = res.x
+    inf_t = phylovector.vector2tree(inf_v, ["Agu", "E", "Meopo", "Sedu", "Tarami"])
+    inf_t.show()
+
+    print(tree.write(format=1))
+    print(inf_t.write(format=1))
+
 
 if __name__ == "__main__":
-    #stress_test1()
+    # stress_test1()
     my_minimize()
