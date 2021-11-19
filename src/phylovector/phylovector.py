@@ -113,7 +113,7 @@ def vector2tree(vector, leaves):
 
     return tree
 
-
+# TODO: replace very small numbers with zero, with a tolerance
 def tree2vector(source_tree: ete3.Tree):
     # Make a copy of the tree for manipulation, as we (might) extend the
     # branch leaves to obtain the ultrametric topology. While `ete3`

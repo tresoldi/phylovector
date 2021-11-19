@@ -9,11 +9,15 @@ __email__ = "tiago.tresoldi@lingfil.uu.se"
 
 # Import from local modules
 from .phylovector import tree2vector, vector2tree
-from .common import sorted_newick
+from .common import sorted_newick, start_vector
+from .likelihood import method1, primate
 
 # Build the namespace
 __all__ = [
     "sorted_newick",
     "tree2vector",
     "vector2tree",
+    "method1",
+    "start_vector",
+    "primate",
 ]

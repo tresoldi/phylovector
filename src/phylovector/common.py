@@ -4,6 +4,24 @@ Common data structures and functions.
 
 import ete3
 
+from .phylovector import tree2vector
+
+# TODO: scale to the desired maximum distance from root
+# TODO: make name library mandatory? check it matches `size`?
+def start_vector(size, names_library=None, random_branches=False):
+    """
+    Return a starting vector, useful for optimization.
+
+    This function mostly wraps the ete3.Tree.populate() method.
+    """
+
+    # Generate a random ete3 tree
+    tree = ete3.Tree()
+    tree.populate(size, names_library=names_library, random_branches=random_branches)
+
+    # Return it as a vector
+    return tree2vector(tree)
+
 
 def sorted_newick(newick):
     """

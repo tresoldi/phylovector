@@ -3,3 +3,4 @@ networkx
 numpy
 six
 scipy
+scikit-optimize
