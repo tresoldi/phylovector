@@ -7,16 +7,20 @@ import phylovector
 
 
 def main():
-    vector = [3.0, 1.5, 3.0, 4.0, 3.0, 8.0, 8.0, 5.0, 3.0, 3.0, 8.0, 8.0, 8.0, 8.0, 5.0]
+#    vector = [3.0, 1.5, 3.0, 4.0, 3.0, 8.0, 8.0, 5.0, 3.0, 3.0, 8.0, 8.0, 8.0, 8.0, 5.0]
+    vector = [0.0, 1.0, 0.0, 0.5, 0.0, 8.0, 8.0, 5.0, 3.0, 2.0, 8.0, 8.0, 8.0, 8.0, 5.0]
+
     leaves = ["A", "B", "C", "D", "E"]
     tree = phylovector.vector2tree(vector, leaves)
+    #tree.show()
 
     # print(tree)
-    newick = tree.write(format=1)
-    print(newick)
+    print("OT", tree.write(format=1))
 
     new_vector = phylovector.tree2vector(tree)
-    print(new_vector)
+    print("RB", new_vector)
+
+    return
 
     # random
     # t0 = ngesh.gen_tree(1.0, 0.5, max_time=2.0, labels="human")
@@ -50,4 +54,4 @@ def main2():
 
 if __name__ == "__main__":
     main()
-#    main2()
+    main2()
