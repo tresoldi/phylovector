@@ -123,7 +123,7 @@ def vector2tree(vector, leaves):
     return tree
 
 
-def tree2vector(source_tree):
+def tree2vector(source_tree, components=False):
     # Make a copy of the tree for manipulation, as we (might) extend the
     # branch leaves to obtain the ultrametric topology. While `ete3`
     # offers copy methods, we take the simpler approach of rebuilding
@@ -145,9 +145,12 @@ def tree2vector(source_tree):
             leaf.dist += diff
 
     # Build ultrametric part of the vector
-    vector = lengths + []
+    um = []
     for leaf_i, leaf_j in itertools.combinations(sorted(leaves), 2):
         comm_anc = tree.get_common_ancestor(leaf_i, leaf_j)
-        vector.append(tree.get_distance(comm_anc, leaf_i))
+        um.append(tree.get_distance(comm_anc, leaf_i))
 
-    return vector
+    if components:
+        return lengths, um
+    else:
+        return lengths + um

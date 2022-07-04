@@ -33,12 +33,19 @@ def stress_test1():
             print("built", built_newick)
 
 def my_minimize():
+
+    tree = ngesh.gen_tree(1.0, 0.5, max_time=1.0, labels="human", seed=42)
+    vector = phylovector.tree2vector(tree)
+    treefun("---", vector)
+
+    return 
+
     def treefun(x):
         ref = ["BAAA", "ABCA", "ABAB", "BABA", "ABAA"]
-        for leaf_i, leaf_j in itertools.combinations(range(len(ref)), 2)
-            matches = [ref[leaf_i][c] for c in range(
+        for leaf_i, leaf_j in itertools.combinations(range(len(ref)), 2):
+           matches = [ref[leaf_i][c] for c in range(
                  
-            )]
+            )]#
 
         n = int((math.sqrt(8 * len(x) + 1) - 1) / 2)
 
@@ -62,7 +69,7 @@ def my_minimize():
 
     tree = ngesh.gen_tree(1.0, 0.5, max_time=1.0, labels="human", seed=42)
     vector = phylovector.tree2vector(tree)
-    treefun(vector)
+    treefun("---", vector)
 
     return
 
@@ -79,5 +86,5 @@ def my_minimize():
     print("..", myfun(res.x))
 
 if __name__ == "__main__":
-    #stress_test1()
-    my_minimize()
+    stress_test1()
+    #my_minimize()
