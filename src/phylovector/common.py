@@ -6,6 +6,7 @@ import ete3
 
 from .phylovector import tree2vector
 
+
 # TODO: scale to the desired maximum distance from root
 # TODO: make name library mandatory? check it matches `size`?
 def start_vector(size, names_library=None, random_branches=False):

@@ -1,7 +1,7 @@
 # Script for supporting development, later to be included as part of
 # the paper
 
-import ngesh
+#import ngesh
 
 import phylovector
 
@@ -16,6 +16,10 @@ def main():
 
     # print(tree)
     print("OT", tree.write(format=1))
+
+    # Print an ASCII representation of the tree to the console with ete3
+    print(tree.get_ascii(attributes=["name", "dist"], show_internal=True, compact=False))
+
 
     new_vector = phylovector.tree2vector(tree)
     print("RB", new_vector)
