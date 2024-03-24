@@ -27,14 +27,18 @@ import phylovector
         "(Pilo:1.59205,((Uhi:0.216126,(Molkuo:0.201413,(Erie:0.0828869,Oai:0.0828869):0.118527):0.0147131):0.883773,(Zupru:1.00155,(Guna:0.343031,(Nudu:0.836214,(Rozo:0.219106,(Hemif:0.405284,Kegbimlon:0.405284):0.205327):0.225603):0.0435484):0.121785):0.0983528):0.832601);",
         "(Vogab:1.04313,((Ue:0.122688,Vinedfap:0.276122):0.541514,((Bia:0.485216,Maue:0.485216):0.342772,(Pevu:0.0733257,Tutano:0.0733257):0.754663):0.607921):0.346808);",
         "(Lolol:0.900328,(Zua:1.71472,((Keme:1.3712,(Bema:0.080973,Tugugum:0.080973):1.39579):0.071799,(Eki:1.23722,((Aki:0.217514,Desu:0.217514):0.961745,(Zovle:0.819957,(Ezape:0.657111,(Kupge:0.0879704,Tazvi:0.0879704):0.56914):0.162846):0.359303):0.057965):0.311337):0.166161):0.224726);",
+        "((A:0.1,B:0.2):0.3,(C:0.4,D:0.5):0.6);",
     ],
 )
 def test_from_newick(newick):
     #    print("...", [newick])
     tree_a = ete3.Tree(newick)
     leaves = sorted([leaf.name for leaf in tree_a.iter_leaves()])
-    vector = phylovector.tree2vector(tree_a)
+    vector = phylovector.tree2vector(tree_a, epsilon=1e-12)
     tree_b = phylovector.vector2tree(vector, leaves)
     test_newick = phylovector.sorted_newick(tree_b.write(format=1))
+
+    print(vector)
+    print(tree_b.write(format=1))
 
     assert test_newick == newick
